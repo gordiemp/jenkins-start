@@ -1,7 +1,12 @@
-FROM alpine:3.12
+FROM nginx:alpine
+MAINTAINER Maksym Gordienko
 
-RUN apk update && apk add --no-cache fortune
+RUN apk update && apk upgrade
 
-USER 1001
+ADD ./entrypoint.sh /tmp/entrypoint.sh
 
-ENTRYPOINT ["fortune"]
+WORKDIR /tmp
+
+RUN chmod +x /tmp/entrypoint.sh
+ENTRYPOINT sh -c "/tmp/entrypoint.sh"
+CMD /usr/share/nginx/html/entrypoint.sh && nginx -g 'daemon off;'
